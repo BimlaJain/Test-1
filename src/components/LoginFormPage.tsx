@@ -4,11 +4,12 @@ import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
 const LoginFormPage = () => {
+    // typscript interface define
     interface FormData {
         email: string;
         password: string;
     }
-
+// errors typescripy interface 
     interface Errors {
         email?: string;
         password?: string;
@@ -54,9 +55,9 @@ const LoginFormPage = () => {
     return (
         <div className="min-h-screen flex items-center justify-center">
             <div className="items-center justify-between flex">
-                <div className="container">
+                <div className="container px-[35px]">
                     <img src="../assets/images/png/logo.png" alt="logo" width={163} height={31} />
-                    <h1 className="font-semibold text-3xl leading-[58.5px] text-black pt-[138px]">Welcome Back</h1>
+                    <h1 className="font-semibold text-3xl leading-[58.5px] text-black md:pt-[138px] pt-[90px]">Welcome Back</h1>
                     <p className="text-sm leading-[30px] text-gray">Welcome back! Please enter your details.</p>
                     <form className="pt-[31px] max-w-[456px]" onSubmit={handleSubmit}>
                         <div className="mb-[18px]">
@@ -88,8 +89,8 @@ const LoginFormPage = () => {
                             )}
                         </div>
 
-                        <div className="flex items-center justify-between">
-                            <label className="flex items-center text-base">
+                        <div className="md:flex md:items-center md:justify-between">
+                            <label className="flex items-center text-base max-md:mb-[14px]">
                                 <input
                                     type="checkbox"
                                     checked={rememberMe}
@@ -117,7 +118,7 @@ const LoginFormPage = () => {
                         >
                             <img src="../assets/images/svg/google.svg" alt="google" /> Sign in with Google
                         </button>
-                        <p className="mt-4 text-center text-sm">
+                        <p className="mt-4 md:text-center text-sm">
                             Don’t have an account?{" "}
                             <a href="#" className="text-blue hover:underline">
                                 Sign up
@@ -125,7 +126,7 @@ const LoginFormPage = () => {
                         </p>
                     </form>
                 </div>
-                <div className="my-9 mr-7 w-full">
+                <div className="my-9 mr-7 w-full md:block hidden">
                     <img src="../assets/images/png/loginform-img.png" alt="login-form-image" width={759} height={899} />
                 </div>
             </div>
