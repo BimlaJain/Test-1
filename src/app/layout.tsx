@@ -14,10 +14,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Test",
-  description: "FOR A WHEALTHIER LIFESTYLE. ANYTIME, ANYWHERE",
+  description: "Welcome back! Please enter your details.",
   openGraph: {
     title: "Test",
-    description: "FOR A WHEALTHIER LIFESTYLE. ANYTIME, ANYWHERE",
+    description: "Welcome back! Please enter your details.",
     images: [
       {
         url: "./public/meta-img.png",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Test",
-    description: "FOR A WHEALTHIER LIFESTYLE. ANYTIME, ANYWHERE",
+    description: "Welcome back! Please enter your details.",
     images: [".//public/meta-img.png"],
   },
 };
