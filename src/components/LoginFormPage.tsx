@@ -63,7 +63,7 @@ const LoginFormPage = () => {
                 // reset form data
                 setFormData({ email: "", password: "" });
                 // push to dashboard page 
-                router.push("/dashboard");
+                router.push("/dashboard-page");
             });
         }
     };
