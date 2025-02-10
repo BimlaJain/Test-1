@@ -4,51 +4,65 @@ import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
 const LoginFormPage = () => {
-    // typscript interface define
+    // typscript interface 
     interface FormData {
         email: string;
         password: string;
     }
-// errors typescripy interface 
+// errors typescript interface 
     interface Errors {
         email?: string;
         password?: string;
         rememberMe?: string;
     }
 
+    // useState Data
     const [formData, setFormData] = useState<FormData>({email: "", password: ""  });
     const [rememberMe, setRememberMe] = useState(false);
     const [errors, setErrors] = useState<Errors>({});
     const router = useRouter();
 
+    // handle change function
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    // validate function
     const validate = (): Errors => {
+        // new error object 
         const newErrors: Errors = {};
+        // if email is empty
         if (!formData.email) newErrors.email = "Email is required";
+        // if email is not valid or password empty
         if (!formData.password) newErrors.password = "Password is required";
+            // if password length is less than 6
         else if (formData.password.length < 6) newErrors.password = "Password must be at least 6 characters";
+        // if checkbox is not checked
         if (!rememberMe) newErrors.rememberMe = "Agree it for sign in";
         return newErrors;
     };
-
+// handlesubmit function
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        // prevent default
         e.preventDefault();
         const validationErrors = validate();
+        // if validation errors
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
         } else {
             setErrors({});
+            // sweet alert
             Swal.fire({
                 title: "Success",
                 text: "Login successful!",
                 icon: "success",
                 confirmButtonText: "OK",
             }).then(() => {
+                // set local storage 
                 localStorage.setItem("formData", JSON.stringify(formData));
-                setFormData({email: "" , password: ""});
+                // reset form data
+                setFormData({ email: "", password: "" });
+                // push to dashboard page 
                 router.push("/dashboard");
             });
         }
@@ -58,11 +72,13 @@ const LoginFormPage = () => {
         <div className="min-h-screen flex items-center justify-center">
             <div className="items-center justify-between flex">
                 <div className="container px-[35px]">
+                    {/* logo */}
                     <a href="http://localhost:3000/">
                         <img src="../assets/images/png/logo.png" alt="logo" width={163} height={31} />
                   </a>
                     <h1 className="font-semibold text-3xl leading-[58.5px] text-black md:pt-[138px] pt-[90px]">Welcome Back</h1>
                     <p className="text-sm leading-[30px] text-gray">Welcome back! Please enter your details.</p>
+                    {/* form */}
                     <form className="pt-[31px] max-w-[456px]" onSubmit={handleSubmit}>
                         <div className="mb-[18px]">
                             <label className="text-black text-base font-medium">Email</label>
@@ -74,6 +90,7 @@ const LoginFormPage = () => {
                                 className={`placeholder:text-gray w-full mt-[6px] text-black border-light-gray rounded-lg border p-4 ${errors.email ? "border-red-500" : ""}`}
                                 placeholder="Email"
                             />
+                            {/* if email not field */}
                             {errors.email && (
                                 <p className="text-red-500 text-sm absolute">{errors.email}</p>
                             )}
@@ -88,6 +105,7 @@ const LoginFormPage = () => {
                                 className={`placeholder:text-gray w-full text-black border-light-gray rounded-lg border p-4 ${errors.password ? "border-red-500" : ""}`}
                                 placeholder="Password"
                             />
+                            {/* is password not field  */}
                             {errors.password && (
                                 <p className="text-red-500 text-sm mt-1 absolute">{errors.password}</p>
                             )}
@@ -106,6 +124,7 @@ const LoginFormPage = () => {
                                 Forgot password?
                             </a>
                         </div>
+                        {/* if checkbox not field */}
                         {errors.rememberMe && (
                             <p className="text-red-500 text-sm mt-1">{errors.rememberMe}</p>
                         )}
