@@ -40,7 +40,13 @@ const Dashboard = () => {
 
         return (
             <>
-                <div className="flex items-center justify-center gap-10 my-6">
+                <div className="flex max-md:flex-col items-center justify-center gap-10 my-6">
+                    <button
+                        onClick={() => remove()}
+                        className="border border-black rounded-xl px-2 py-1"
+                    >
+                        log out
+                    </button>
                     {["Question 1", "Question 2", "Question 3"].map((label, index) => (
                         <button
                             key={index}
