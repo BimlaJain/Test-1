@@ -4,6 +4,16 @@ import { useSearchParams } from "next/navigation";
 import { InlineWidget } from "react-calendly";
 
 const ButtonQuestions = () => {
+    const Question = [{
+        list: {
+            data: [
+                {
+                    title: "What is the capital of India?",
+                    options: ["New Delhi", "Mumbai", "Kolkata", "Chennai"],
+                }
+            ]
+        }
+    }];
     const searchParams = useSearchParams();
     const email = searchParams.get("email");
 
@@ -45,8 +55,7 @@ const ButtonQuestions = () => {
 
             {activeQuestion === 1 && (
                 <div>
-                    <h2 className="text-xl font-bold mb-2">What is the capital of India?</h2>
-                    <p>New Delhi</p>
+                    <p>{Question[0].list.data[0].title} {Question[0].list.data[0].options[0]}</p>
                 </div>
             )}
 
