@@ -19,6 +19,7 @@ const Dashboard = () => {
     const out = useRouter();
     // remove value fuction
     function remove() {
+        localStorage.setItem("isAuthenticated", "false");
         localStorage.removeItem("formValue");
         out.push("/");
     }

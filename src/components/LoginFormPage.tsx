@@ -15,7 +15,6 @@ const LoginFormPage = () => {
         password?: string;
         rememberMe?: string;
     }
-
     // useState Data
     const [formData, setFormData] = useState<FormData>({email: "", password: ""  });
     const [rememberMe, setRememberMe] = useState(false);
@@ -60,6 +59,7 @@ const LoginFormPage = () => {
             }).then(() => {
                 // set local storage 
                 localStorage.setItem("formData", JSON.stringify(formData));
+                localStorage.setItem("isAuthenticated", "true");
                 // reset form data
                 setFormData({ email: "", password: "" });
                 // push to dashboard page 
@@ -110,7 +110,6 @@ const LoginFormPage = () => {
                                 <p className="text-red-500 text-sm mt-1 absolute">{errors.password}</p>
                             )}
                         </div>
-
                         <div className="md:flex md:items-center md:justify-between">
                             <label className="flex items-center text-base max-md:mb-[14px]">
                                 <input
