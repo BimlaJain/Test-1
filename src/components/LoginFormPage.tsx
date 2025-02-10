@@ -9,14 +9,14 @@ const LoginFormPage = () => {
         email: string;
         password: string;
     }
-// errors typescript interface 
+    // errors typescript interface 
     interface Errors {
         email?: string;
         password?: string;
         rememberMe?: string;
     }
     // useState Data
-    const [formData, setFormData] = useState<FormData>({email: "", password: ""  });
+    const [formData, setFormData] = useState<FormData>({ email: "", password: "" });
     const [rememberMe, setRememberMe] = useState(false);
     const [errors, setErrors] = useState<Errors>({});
     const router = useRouter();
@@ -34,13 +34,13 @@ const LoginFormPage = () => {
         if (!formData.email) newErrors.email = "Email is required";
         // if email is not valid or password empty
         if (!formData.password) newErrors.password = "Password is required";
-            // if password length is less than 6
+        // if password length is less than 6
         else if (formData.password.length < 6) newErrors.password = "Password must be at least 6 characters";
         // if checkbox is not checked
         if (!rememberMe) newErrors.rememberMe = "Agree it for sign in";
         return newErrors;
     };
-// handlesubmit function
+    // handlesubmit function
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         // prevent default
         e.preventDefault();
@@ -75,7 +75,7 @@ const LoginFormPage = () => {
                     {/* logo */}
                     <a href="http://localhost:3000/">
                         <img src="../assets/images/png/logo.png" alt="logo" width={163} height={31} />
-                  </a>
+                    </a>
                     <h1 className="font-semibold text-3xl leading-[58.5px] text-black md:pt-[138px] pt-[90px]">Welcome Back</h1>
                     <p className="text-sm leading-[30px] text-gray">Welcome back! Please enter your details.</p>
                     {/* form */}
