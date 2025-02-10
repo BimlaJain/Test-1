@@ -16,7 +16,7 @@ const LoginFormPage = () => {
         rememberMe?: string;
     }
 
-    const [formData, setFormData] = useState<FormData>({ email: "", password: "" });
+    const [formData, setFormData] = useState<FormData>({email: "", password: ""  });
     const [rememberMe, setRememberMe] = useState(false);
     const [errors, setErrors] = useState<Errors>({});
     const router = useRouter();
@@ -47,7 +47,9 @@ const LoginFormPage = () => {
                 icon: "success",
                 confirmButtonText: "OK",
             }).then(() => {
-                router.push(`/dashboard?email=${formData.email}`);
+                localStorage.setItem("formData", JSON.stringify(formData));
+                setFormData({email: "" , password: ""});
+                router.push("/dashboard");
             });
         }
     };
@@ -56,7 +58,9 @@ const LoginFormPage = () => {
         <div className="min-h-screen flex items-center justify-center">
             <div className="items-center justify-between flex">
                 <div className="container px-[35px]">
-                    <img src="../assets/images/png/logo.png" alt="logo" width={163} height={31} />
+                    <a href="http://localhost:3000/">
+                        <img src="../assets/images/png/logo.png" alt="logo" width={163} height={31} />
+                  </a>
                     <h1 className="font-semibold text-3xl leading-[58.5px] text-black md:pt-[138px] pt-[90px]">Welcome Back</h1>
                     <p className="text-sm leading-[30px] text-gray">Welcome back! Please enter your details.</p>
                     <form className="pt-[31px] max-w-[456px]" onSubmit={handleSubmit}>
