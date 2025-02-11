@@ -22,7 +22,7 @@ const LoginFormPage = () => {
     const router = useRouter();
 
     // handle change function
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: any) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
@@ -41,7 +41,7 @@ const LoginFormPage = () => {
         return newErrors;
     };
     // handlesubmit function
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: any) => {
         // prevent default
         e.preventDefault();
         const validationErrors = validate();
@@ -148,7 +148,7 @@ const LoginFormPage = () => {
                         </p>
                     </form>
                 </div>
-                <div className="my-9 mr-7 w-full md:block hidden">
+                <div className="py-9 pr-7 w-full md:block hidden">
                     <img src="../assets/images/png/loginform-img.png" alt="login-form-image" width={759} height={899} />
                 </div>
             </div>
