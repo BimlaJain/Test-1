@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { InlineWidget } from "react-calendly";
 
 const Dashboard = () => {
@@ -16,30 +16,25 @@ const Dashboard = () => {
         }
     }];
     // use router
-    const out = useRouter();
-    const searchParams = useSearchParams();
-    const section = searchParams.get("value");
+    const router = useRouter();
 
     // remove value fuction
+    useEffect(() => {
+        const isAuthenticated = localStorage.getItem("isAuthenticated");
+        if (!isAuthenticated) {
+            router.push("/");
+        }
+    }, [router]);
     function remove() {
-        localStorage.setItem("isAuthenticated", "false");
-        localStorage.removeItem("formValue");
-        out.push("/");
+        localStorage.removeItem("isAuthenticated");
+        router.push("/");
     }
     
     // usestate
     const [activeQuestion, setActiveQuestion] = useState<number | null>(null);
     const [images, setImages] = useState<string[]>([]);
-    const [showQuestion, setShowQuestion] = useState(true);
-    const [showUpload, setShowUpload] = useState(false);
-    const [showSection2, setShowSection2] = useState(false);
     // useeffect
-    useEffect(() => {
-        const section = searchParams.get("value");
-        setShowQuestion(section === "question1");
-        setShowSection2(section === "question2");
-        setShowUpload(section === "question3");
-    }, [searchParams]);
+        
     useEffect(() => {
         return () => {
             images.forEach((imageUrl) => URL.revokeObjectURL(imageUrl));

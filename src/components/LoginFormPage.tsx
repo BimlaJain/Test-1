@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
@@ -23,23 +23,59 @@ const LoginFormPage = () => {
 
     // handle change function
     const handleChange = (e: any) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+
+        setErrors((prevErrors) => {
+            const newErrors = { ...prevErrors };
+
+            if (name === "email") {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+                if (value && emailRegex.test(value)) {
+                    delete newErrors.email;
+                }
+            }
+
+            if (name === "password" && value.length >= 6) {
+                delete newErrors.password;
+            }
+
+            return newErrors;
+        });
     };
 
     // validate function
     const validate = (): Errors => {
-        // new error object 
         const newErrors: Errors = {};
-        // if email is empty
-        if (!formData.email) newErrors.email = "Email is required";
-        // if email is not valid or password empty
-        if (!formData.password) newErrors.password = "Password is required";
-        // if password length is less than 6
-        else if (formData.password.length < 6) newErrors.password = "Password must be at least 6 characters";
-        // if checkbox is not checked
-        if (!rememberMe) newErrors.rememberMe = "Agree it for sign in";
+
+        // Email validation regex
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+
+        if (!formData.email) {
+            newErrors.email = "Email is required";
+        } else if (!emailRegex.test(formData.email)) {
+            newErrors.email = "Enter a valid email address";
+        }
+
+        if (!formData.password) {
+            newErrors.password = "Password is required";
+        } else if (formData.password.length < 6) {
+            newErrors.password = "Password must be at least 6 characters";
+        }
+
+        if (!rememberMe) {
+            newErrors.rememberMe = "Agree it for sign in";
+        }
+
         return newErrors;
     };
+    useEffect(() => {
+        const isAuthenticated = localStorage.getItem("isAuthenticated");
+        if (isAuthenticated === "true") {
+            router.push("/dashboard-page");
+        }
+    }, [router]);
+
     // handlesubmit function
     const handleSubmit = (e: any) => {
         // prevent default
@@ -71,15 +107,15 @@ const LoginFormPage = () => {
     return (
         <div className="min-h-screen flex items-center justify-center">
             <div className="items-center justify-between flex">
-                <div className="container px-[35px]">
+                <div className="container px-[35px] max-md:pt-[32px] max-md:pb-24">
                     {/* logo */}
-                    <a href="http://localhost:3000/">
+                    <a href="/">
                         <img src="../assets/images/png/logo.png" alt="logo" width={163} height={31} />
                     </a>
                     <h1 className="font-semibold text-3xl leading-[58.5px] text-black md:pt-[138px] pt-[90px]">Welcome Back</h1>
                     <p className="text-sm leading-[30px] text-gray">Welcome back! Please enter your details.</p>
                     {/* form */}
-                    <form className="pt-[31px] max-w-[456px]" onSubmit={handleSubmit}>
+                    <form className="pt-[31px] max-w-[456px] " onSubmit={handleSubmit}>
                         <div className="mb-[18px]">
                             <label className="text-black text-base font-medium">Email</label>
                             <input
