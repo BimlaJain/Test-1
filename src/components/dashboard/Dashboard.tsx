@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { InlineWidget } from "react-calendly";
 
 const Dashboard = () => {
@@ -17,16 +17,29 @@ const Dashboard = () => {
     }];
     // use router
     const out = useRouter();
+    const searchParams = useSearchParams();
+    const section = searchParams.get("value");
+
     // remove value fuction
     function remove() {
         localStorage.setItem("isAuthenticated", "false");
         localStorage.removeItem("formValue");
         out.push("/");
     }
+    
     // usestate
     const [activeQuestion, setActiveQuestion] = useState<number | null>(null);
     const [images, setImages] = useState<string[]>([]);
+    const [showQuestion, setShowQuestion] = useState(true);
+    const [showUpload, setShowUpload] = useState(false);
+    const [showSection2, setShowSection2] = useState(false);
     // useeffect
+    useEffect(() => {
+        const section = searchParams.get("value");
+        setShowQuestion(section === "question1");
+        setShowSection2(section === "question2");
+        setShowUpload(section === "question3");
+    }, [searchParams]);
     useEffect(() => {
         return () => {
             images.forEach((imageUrl) => URL.revokeObjectURL(imageUrl));
@@ -56,7 +69,7 @@ const Dashboard = () => {
                 >
                     log out
                 </button>
-                {/* questionbbuttons from map */}
+                {/* question buttons from map */}
                 {["Question 1", "Question 2", "Question 3"].map((label, index) => (
                     <button
                         key={index}

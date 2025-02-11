@@ -103,7 +103,7 @@ const LoginFormPage = () => {
                                 value={formData.password}
                                 onChange={handleChange}
                                 className={`placeholder:text-gray w-full text-black border-light-gray rounded-lg border p-4 ${errors.password ? "border-red-500" : ""}`}
-                                placeholder="Password"
+                                placeholder="••••••••"
                             />
                             {/* is password not field  */}
                             {errors.password && (
@@ -130,7 +130,7 @@ const LoginFormPage = () => {
 
                         <button
                             type="submit"
-                            className="w-full bg-black text-white p-3 mt-6 rounded-lg hover:bg-gray-800"
+                            className="w-full bg-black text-white p-3 mt-6 rounded-lg hover:bg-gray transition-all duration-500"
                         >
                             Sign In
                         </button>
