@@ -1,195 +1,154 @@
 "use client";
-import React, { useState , useEffect } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
-const LoginFormPage = () => {
-    // typscript interface 
-    interface FormData {
-        email: string;
-        password: string;
-    }
-    // errors typescript interface 
-    interface Errors {
-        email?: string;
-        password?: string;
-        rememberMe?: string;
-    }
-    // useState Data
-    const [formData, setFormData] = useState<FormData>({ email: "", password: "" });
-    const [rememberMe, setRememberMe] = useState(false);
-    const [errors, setErrors] = useState<Errors>({});
+const MyLoginForm = () => {
+    const myState = {
+        email: "",
+        password: "",
+        customCheckBox: false,
+    };
+
+    const [formValue, setFormValue] = useState(myState);
+    const [errors, setErrors] = useState(false);
     const router = useRouter();
 
-    // handle change function
-    const handleChange = (e: any) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+    const emailRegax = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 
-        setErrors((prevErrors) => {
-            const newErrors = { ...prevErrors };
-
-            if (name === "email") {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-                if (value && emailRegex.test(value)) {
-                    delete newErrors.email;
-                }
-            }
-
-            if (name === "password" && value.length >= 6) {
-                delete newErrors.password;
-            }
-
-            return newErrors;
-        });
-    };
-
-    // validate function
-    const validate = (): Errors => {
-        const newErrors: Errors = {};
-
-        // Email validation regex
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-
-        if (!formData.email) {
-            newErrors.email = "Email is required";
-        } else if (!emailRegex.test(formData.email)) {
-            newErrors.email = "Enter a valid email address";
-        }
-
-        if (!formData.password) {
-            newErrors.password = "Password is required";
-        } else if (formData.password.length < 6) {
-            newErrors.password = "Password must be at least 6 characters";
-        }
-
-        if (!rememberMe) {
-            newErrors.rememberMe = "Agree it for sign in";
-        }
-
-        return newErrors;
-    };
     useEffect(() => {
         const isAuthenticated = localStorage.getItem("isAuthenticated");
         if (isAuthenticated === "true") {
             router.push("/dashboard-page");
         }
-    }, [router]);
+    }, []);
 
-    // handlesubmit function
-    const handleSubmit = (e: any) => {
-        // prevent default
+    const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        const validationErrors = validate();
-        // if validation errors
-        if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);
-        } else {
-            setErrors({});
-            // sweet alert
+        setErrors(true);
+
+        if (
+            formValue.email.length > 0 &&
+            emailRegax.test(formValue.email) &&
+            formValue.password.length >= 6 &&
+            formValue.customCheckBox
+        ) {
+            setErrors(false);
             Swal.fire({
                 title: "Success",
                 text: "Login successful!",
                 icon: "success",
                 confirmButtonText: "OK",
             }).then(() => {
-                // set local storage 
-                localStorage.setItem("formData", JSON.stringify(formData));
                 localStorage.setItem("isAuthenticated", "true");
-                // reset form data
-                setFormData({ email: "", password: "" });
-                // push to dashboard page 
                 router.push("/dashboard-page");
             });
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center">
-            <div className="items-center justify-between flex">
-                <div className="container px-[35px] max-md:pt-[32px] max-md:pb-24">
-                    {/* logo */}
-                    <a href="/">
-                        <img src="../assets/images/png/logo.png" alt="logo" width={163} height={31} />
+        <div className="min-h-screen flex 2xl:justify-center lg:justify-end justify-center pr-[27px] pb-10 max-sm:px-[35px] xl:pl-[237px] pl-10 pt-[30px]">
+            <div className="justify-end gap-[120px] flex">
+                <div className="container ml-auto">
+                    <a href="#">
+                        <img className="pt-[19.37px]" src="../assets/images/png/logo.png" alt="logo" width={163} height={31} />
                     </a>
                     <h1 className="font-semibold text-3xl leading-[58.5px] text-black md:pt-[138px] pt-[90px]">Welcome Back</h1>
                     <p className="text-sm leading-[30px] text-gray">Welcome back! Please enter your details.</p>
-                    {/* form */}
-                    <form className="pt-[31px] max-w-[456px] " onSubmit={handleSubmit}>
+                    <form className="pt-[31px] max-w-[456px]" onSubmit={handleSubmit}>
                         <div className="mb-[18px]">
                             <label className="text-black text-base font-medium">Email</label>
                             <input
                                 name="email"
                                 type="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                className={`placeholder:text-gray w-full mt-[6px] text-black border-light-gray rounded-lg border p-4 ${errors.email ? "border-red-500" : ""}`}
+                                value={formValue.email}
+                                onChange={(e) =>
+                                    setFormValue({ ...formValue, email: e.target.value })
+                                }
+                                className="placeholder:text-gray w-full mt-[6px] text-gray border-lightGray rounded-lg border p-4"
                                 placeholder="Email"
                             />
-                            {/* if email not field */}
-                            {errors.email && (
-                                <p className="text-red-500 text-sm absolute">{errors.email}</p>
-                            )}
+                            <p className="text-red-500">
+                                {errors && formValue.email.length === 0
+                                    ? "Required"
+                                    : !emailRegax.test(formValue.email) &&
+                                        formValue.email.length > 0
+                                        ? "Email is invalid"
+                                        : ""}
+                            </p>
                         </div>
                         <div className="mt-[6px] mb-5">
                             <label className="text-black text-base font-medium">Password</label>
                             <input
                                 name="password"
                                 type="password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                className={`placeholder:text-gray w-full text-black border-light-gray rounded-lg border p-4 ${errors.password ? "border-red-500" : ""}`}
+                                value={formValue.password}
+                                onChange={(e) =>
+                                    setFormValue({ ...formValue, password: e.target.value })
+                                }
+                                className="placeholder:text-gray w-full mt-[6px] text-gray border-lightGray rounded-lg border p-4"
                                 placeholder="••••••••"
                             />
-                            {/* is password not field  */}
-                            {errors.password && (
-                                <p className="text-red-500 text-sm mt-1 absolute">{errors.password}</p>
-                            )}
+                            <p className="text-red-500">
+                                {errors && formValue.password.length === 0
+                                    ? "Password is required"
+                                    : formValue.password.length < 6 &&
+                                        formValue.password.length > 0
+                                        ? "Password must be at least 6 characters"
+                                        : ""}
+                            </p>
                         </div>
-                        <div className="md:flex md:items-center md:justify-between">
-                            <label className="flex items-center text-base max-md:mb-[14px]">
+                        <div className="lg:flex md:items-center md:justify-between">
+                            <label className="flex items-center text-base max-md:mb-[14px] font-inter">
                                 <input
                                     type="checkbox"
-                                    checked={rememberMe}
-                                    onChange={(e) => setRememberMe(e.target.checked)}
+                                    checked={formValue.customCheckBox}
+                                    onChange={(e) =>
+                                        setFormValue({
+                                            ...formValue,
+                                            customCheckBox: e.target.checked,
+                                        })
+                                    }
                                     className="mr-2 text-base"
                                 /> Remember for 30 days
                             </label>
-                            <a href="#" className="text-base text-blue hover:underline">
+                            <a href="#" className="text-base text-blue hover:text-red-600 transition-all duration-700">
                                 Forgot password?
                             </a>
                         </div>
-                        {/* if checkbox not field */}
-                        {errors.rememberMe && (
-                            <p className="text-red-500 text-sm mt-1">{errors.rememberMe}</p>
-                        )}
+                        <p className="text-red-500">
+                            {errors && formValue.customCheckBox === false
+                                ? "Agree in for sign in"
+                                : ""}
+                        </p>
 
                         <button
                             type="submit"
-                            className="w-full bg-black text-white p-3 mt-6 rounded-lg hover:bg-gray transition-all duration-500"
+                            className="w-full bg-black text-white p-3 mt-6 rounded-lg hover:bg-slate-500 transition-all duration-700"
                         >
                             Sign In
                         </button>
+
                         <button
                             type="button"
-                            className="w-full flex items-center justify-center p-3 mt-[6px] gap-[10px] border rounded-lg hover:bg-gray-100"
+                            className="w-full flex items-center justify-center p-3 mt-[6px] gap-[10px] border border-lightGray rounded-lg hover:bg-slate-600 hover:text-white transition-all duration-700"
                         >
                             <img src="../assets/images/svg/google.svg" alt="google" /> Sign in with Google
                         </button>
-                        <p className="mt-4 md:text-center text-sm">
+                        <p className="mt-4 md:text-center text-base font-inter">
                             Don’t have an account?{" "}
-                            <a href="#" className="text-blue hover:underline">
+                            <a href="#" className="text-blue hover:text-red-600 transition-all duration-700">
                                 Sign up
                             </a>
                         </p>
                     </form>
                 </div>
-                <div className="py-9 pr-7 w-full md:block hidden">
-                    <img src="../assets/images/png/loginform-img.png" alt="login-form-image" width={759} height={899} />
+                <div className="max-w-[759px] max-lg:hidden w-full h-[899px] bg-darkBlue xl:px-[90px] rounded-[20px] flex justify-center items-center">
+                    <img className="pointer-events-none max-2xl:w-10/12" src="./assets/images/png/loginform-img.png" alt="form-image" width={759} height={899} />
                 </div>
             </div>
         </div>
     );
 };
 
-export default LoginFormPage;
+export default MyLoginForm;

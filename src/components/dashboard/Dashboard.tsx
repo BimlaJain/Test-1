@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { InlineWidget } from "react-calendly";
 
 const Dashboard = () => {
@@ -16,22 +16,18 @@ const Dashboard = () => {
     }];
 
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const questionParam = searchParams.get("question");
+    const [activeQuestion, setActiveQuestion] = useState<number | null>(questionParam ? Number(questionParam) : null);
+    const [images, setImages] = useState<string[]>([]);
+    const [error, setError] = useState<string>("");
 
     useEffect(() => {
         const isAuthenticated = localStorage.getItem("isAuthenticated");
         if (!isAuthenticated) {
             router.push("/");
         }
-    }, [router]);
-
-    function remove() {
-        localStorage.removeItem("isAuthenticated");
-        router.push("/");
-    }
-
-    const [activeQuestion, setActiveQuestion] = useState<number | null>(null);
-    const [images, setImages] = useState<string[]>([]);
-    const [error, setError] = useState<string>("");
+    }, []);
 
     useEffect(() => {
         return () => {
@@ -47,39 +43,44 @@ const Dashboard = () => {
             const invalidFiles = uploadedFiles.filter(file => !allowedTypes.includes(file.type));
 
             if (invalidFiles.length > 0) {
-                setError("Only PNG, JPG, and WEBP formats are allowed.");
-            } else {
+                setError("only PNG,WEBP,JPEG files are allowed");
+
+            }
+            else {
                 setError("");
             }
-
             const uploadedImages = validImages.map((file) =>
                 URL.createObjectURL(file)
             );
-
             setImages((prevImages) => [...prevImages, ...uploadedImages]);
         }
     };
+
+    const handleQuestionClick = (index: number) => {
+        setActiveQuestion(index);
+        router.push(`?question=${index}`);
+    };
+
     return (
-        <>
+        <div className="px-4 text-center">
             <div className="flex max-md:flex-col items-center justify-center gap-10 my-6">
                 <button
-                    onClick={() => remove()}
-                    className="border border-black rounded-xl px-2 py-1"
+                    onClick={() => {
+                        localStorage.removeItem("isAuthenticated");
+                        router.push("/");
+                    }}
+                    className="border border-black rounded-lg px-4 py-2"
                 >
-                    log out
+                    Log Out
                 </button>
-                {[
-                    "Question 1",
-                    "Question 2",
-                    "Question 3"
-                ].map((label, index) => (
+                {["Question 1", "Question 2", "Question 3"].map((label, index) => (
                     <button
                         key={index}
                         className={`px-7 py-3 rounded-xl font-medium text-white ${activeQuestion === index + 1
-                            ? "bg-green-600"
-                            : "bg-purple-700 hover:bg-purple-600"
-                            }`}
-                        onClick={() => setActiveQuestion(index + 1)}
+                            ? "bg-green-800"
+                            : "bg-red-700 hover:bg-red-600"}
+                        `}
+                        onClick={() => handleQuestionClick(index + 1)}
                     >
                         {label}
                     </button>
@@ -93,7 +94,7 @@ const Dashboard = () => {
             {activeQuestion === 2 && (
                 <div>
                     <InlineWidget
-                        url="https://calendly.com/vj13798/30min"
+                        url="https://calendly.com/bishnoisonam079"
                         styles={{ height: "600px" }}
                     />
                 </div>
@@ -115,7 +116,7 @@ const Dashboard = () => {
                     </div>
                 </div>
             )}
-        </>
+        </div>
     );
 };
 

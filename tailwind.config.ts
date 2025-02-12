@@ -24,6 +24,7 @@ export default {
 			  "gray": "#656566",
 			  "light-gray": "#D0D5DD",
 			  "blue": "#007BFF",
+			  "darkBlue": "#0031E2",
 			}
   	}
   },
